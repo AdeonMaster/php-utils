@@ -5,9 +5,9 @@
     static $handle = NULL;
     static $totalInstances = 0;
 
-    function __construct($dbServerName = DB_SERVER_NAME, $dbUserName = DB_USER_NAME, $dbUserPassword = DB_USER_PASSWORD, $dbName = DB_NAME) {
+    function __construct($dbServerName, $dbUserName, $dbUserPassword, $dbName) {
       if(!self::$handle) {
-        self::$handle = new mysqli($dbServerName, $dbUserName, $dbUserPassword, $dbName);
+        self::$handle = new \mysqli($dbServerName, $dbUserName, $dbUserPassword, $dbName);
       }
 
       ++self::$totalInstances;
@@ -125,7 +125,7 @@
       if($where !== null) {
         $where_pieces = '';
         if(is_string($where)) {
-            $where_pieces = $where;
+          $where_pieces = $where;
         } else if(is_array($where)) {
           $where_pieces = implode(' AND ', array_map(function($value, $key) {
             return is_array($value)

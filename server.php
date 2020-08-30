@@ -43,7 +43,7 @@
       return json_decode(file_get_contents('php://input'), true);
     }
 
-    function formatErrorMessage($message, $code, $file, $line) {
+    function formatErrorMessage($code, $message, $file, $line) {
       return "$message file:$file line:$line";
     }
 
@@ -108,13 +108,13 @@
         $line = $error['line'];
 
         http_response_code(500);
-        die(json_encode(['error' => self::formatErrorMessage($message, $code, $file, $line)], JSON_UNESCAPED_UNICODE));
+        die(json_encode(['error' => self::formatErrorMessage($code, $message, $file, $line)], JSON_UNESCAPED_UNICODE));
       }
     }
 
-    function customErrorHandler($message, $code, $file, $line) {
+    function customErrorHandler($code, $message, $file, $line) {
       http_response_code(500);
-      die(json_encode(['error' => self::formatErrorMessage($message, $code, $file, $line)], JSON_UNESCAPED_UNICODE));
+      die(json_encode(['error' => self::formatErrorMessage($code, $message, $file, $line)], JSON_UNESCAPED_UNICODE));
     }
 
     function request(...$args) {
