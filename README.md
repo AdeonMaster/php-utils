@@ -62,9 +62,9 @@ define('JWT_SECRET', 'your-jwt-secret-key');
 
 $jwt = new JWT(JWT_SECRET);
 
-$token = JWT::build(['id' => 'example-id']);
+$token = $jwt->build(['id' => 'example-id']);
 
-if (JWT::validate($token)) {
+if ($jwt->validate($token)) {
   echo 'Valid jwt token!';
 }
 
@@ -92,26 +92,23 @@ Express.js like php server class
 ### Features
 - Routing
 - Middlewares
+- Error handling
 
 ### Usage example
 ```php
 use Adeon\Server;
 
 $app = new Server();
-$app->get('/item', function($request, $response) {
+
+function authMiddleware($request, $response) {
+  // comming soon
+}
+
+$app->post('/item', ['authMiddleware'], function($request, $response) {
   $response->header('Content-type', 'application/json');
 
-  return $response->json([]);
-});
-
-$app->post('/item', function($request, $response) {
-  $response->header('Content-type', 'application/json');
-
-  $body = $request['body'];
-
-  if (!array_key_exists('name')) {
-    $response->code(400);
-    return $response->json(['error' => 'Name is not set']);
+  if (!array_key_exists($request['body'], 'name')) {
+    throw new Error('Name is not set');
   }
 
   // do something with data

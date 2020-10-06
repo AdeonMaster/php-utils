@@ -184,7 +184,12 @@
             $request['params'] = array_merge($params === true ? [] : $params, $request['params']);
 
             if (!array_key_exists('middlewares', $route)) {
-              return $route['cb']($request, $response);
+              try {
+                return $route['cb']($request, $response);
+              } catch(\Throwable $e) {
+                $response->code(400);
+                return $response->json(['error' => $e->getMessage()]);
+              }
             }
 
             // run middlewares
@@ -193,10 +198,15 @@
             $currentMiddlewareIndex = 0;
 
             $nextMiddleware = function() use(&$middlewares, &$totalMiddlewaresCount, &$currentMiddlewareIndex, &$nextMiddleware, &$route, &$request, &$response) {
-              if ($currentMiddlewareIndex !== $totalMiddlewaresCount) {
-                $middlewares[$currentMiddlewareIndex++]($request, $response, $nextMiddleware);
-              } else {
-                $route['cb']($request, $response);
+              try {
+                if ($currentMiddlewareIndex !== $totalMiddlewaresCount) {
+                  $middlewares[$currentMiddlewareIndex++]($request, $response, $nextMiddleware);
+                } else {
+                  return $route['cb']($request, $response);
+                }
+              } catch(\Throwable $e) {
+                $response->code(400);
+                return $response->json(['error' => $e->getMessage()]);
               }
             };
 

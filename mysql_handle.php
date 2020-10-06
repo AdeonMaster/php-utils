@@ -107,7 +107,7 @@
 
     function select(
       $table,
-      $fields, 
+      $fields = '*', 
       $where = null, 
       $orderBy = null, 
       $orderDirection = null, 

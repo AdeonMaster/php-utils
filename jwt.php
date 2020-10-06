@@ -14,7 +14,7 @@
 			$this->secret = $secret;
     }
 
-    public static function build($payload) {
+    public function build($payload) {
       $header = json_encode([
         'typ' => 'JWT',
         'alg' => 'HS256'
@@ -30,7 +30,7 @@
       return $token;
     }
 
-    public static function validate($token) {
+    public function validate($token) {
       $parts = explode('.', $token);
       $base64UrlHeader = $parts[0];
       $base64UrlPayload = $parts[1];
