@@ -18,11 +18,12 @@
     }
 
     function json($array = []) {
-      die(json_encode($array, JSON_UNESCAPED_UNICODE));
+      self::header('Content-Type', 'application/json');
+      echo json_encode($array, JSON_UNESCAPED_UNICODE);
     }
 
     function send($text) {
-      die($text);
+      echo $text;
     }
   }
 

@@ -32,12 +32,19 @@
 
     $response = curl_exec($handle);
     $response_code = curl_getinfo($handle, CURLINFO_RESPONSE_CODE);
+    if (curl_errno($handle)) {
+      $error = curl_error($handle);
+    }
     curl_close($handle);
+
+    if (isset($error)) {
+      throw new \Error($error);
+    }
 
     return [
       'data' => $response,
       'status' => $response_code,
-      'headers' => $response_headers
+      'headers' => $response_headers,
     ];
   };
 ?>

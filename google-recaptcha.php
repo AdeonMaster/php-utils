@@ -7,7 +7,7 @@
 
   class GoogleRecaptcha {
     public function __construct($secret) {
-			$this->secret = $secret;
+		$this->secret = $secret;
     }
 
     function validate($token) {
